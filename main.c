@@ -1,8 +1,8 @@
 /************************************************************** 
 * Class:  CSC-615-01 Fall 2022 
-* Name: Tony Huang
-* Student ID: 915090688 
-* Github ID: tzphuang
+* Name: Tony Huang, Christopher Ling
+* Student ID: 915090688, 918266861 
+* Github ID: tzphuang, dslayer1392
 * Project: Group Term Project
 * 
 * File: main.c
