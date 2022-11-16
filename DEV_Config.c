@@ -137,9 +137,10 @@ UBYTE DEV_I2C_Init(uint8_t Add) // Add is hexadex i2c address
 
 void I2C_Write_Byte(uint8_t fd ,uint8_t Cmd, uint8_t value)
 {
-    char * val = &value;
-    int ref0 = i2cWriteI2CBlockData(fd, Cmd, val, 1);
-    i2cWriteI2CBlockData(fd, Cmd, ptrVal, 1);
+    //char curVal = (char) value;
+    char val[1];
+    val[0] = value;
+    i2cWriteI2CBlockData(fd, Cmd, val, 1);
 }
 
 int I2C_Read_Byte(uint8_t fd ,uint8_t Cmd)

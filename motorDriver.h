@@ -18,6 +18,7 @@
 
 #ifndef MOTORDRIVER
 
+#define UBYTE uint8_t
 #define MOTORHAT1ADDRESS 0x40
 #define MOTORHAT2ADDRESS 0x50
 
@@ -34,24 +35,24 @@
 
 #define MOTORDRIVER
 
-void setAllMotorsTo(int speed);
+void setAllMotorsTo(UBYTE fd, int speed);
 
 //normal car functions we will need to move the car through the obstacle course
 
 //the following functions do not actually propel the car, the car is always "on"
 //we are just setting the direction of the car motors 
-void frontLeftMotorForward();
-void frontRightMotorForward();
-void rearLeftMotorForward();
-void rearRightMotorForward();
+void frontLeftMotorForward(UBYTE fd);
+void frontRightMotorForward(UBYTE fd);
+void rearLeftMotorForward(UBYTE fd);
+void rearRightMotorForward(UBYTE fd);
 
-void frontLeftMotorBackward();
-void frontRightMotorBackward();
-void rearLeftMotorBackward();
-void rearRightMotorBackward();
+void frontLeftMotorBackward(UBYTE fd);
+void frontRightMotorBackward(UBYTE fd);
+void rearLeftMotorBackward(UBYTE fd);
+void rearRightMotorBackward(UBYTE fd);
 
-void driveForward();    
-void driveBackward();
+void driveForward(UBYTE fd);    
+void driveBackward(UBYTE fd);
 void turnLeft();
 void turnRight();
 
