@@ -126,50 +126,34 @@ function:	I2C Function initialization and transfer
 parameter:
 Info:
 ******************************************************************************/
-void DEV_I2C_Init(uint8_t Add) // Add is hexadex i2c address
+UBYTE DEV_I2C_Init(uint8_t Add) // Add is hexadex i2c address
 {
         printf("Pigpio I2C Device\n");
         fd = i2cOpen(1,Add,0);
         printf("fd = %d\n", fd);
-}
-void I2C_Write_Byte(uint8_t Cmd, uint8_t value)
-{
-printf("I2C_Write_Byte was called\n");
-	int ref;
-        //wiringPiI2CWrite(fd,Cmd);
-        //char wbuff[2] = {Cmd, value};
-printf("fd is %d inside i2cwriteByte\n", fd);
-char * val = &value;
-int ref0 = i2cWriteI2CBlockData(fd, Cmd, val, 1); // had to use i2cWriteI2CBlockData instead, i2cWriteByte data didn't work properly for some reason in here
-printf("value of ref0 is %d, Register %d, value %d, and number of bytes: %d\n", ref0, Cmd, value, 1);
-/*        int ref1 =i2cWriteByte(fd, Cmd);
-usleep(100);
-        int ref2 =i2cWriteByte(fd, value);
-/*printf("value of ref1 is %d with value %d, ref2 is %d with value %d\n", ref1, Cmd, ref2, value);
-        //ref = i2cWriteByteData(fd, Cmd, value);
-       //printf("i2cwritebytedata returned ref value %d, Cmd was %d, and value was %d \n", ref, Cmd, value);
-       /* int loop = 1;
-        while(ref2 != 0) {
-            ref2 = i2cWriteByte (fd, value);
-       printf("i2cwritebyte returned ref value %d, on loop %d \n", ref2, loop);
-            ++loop; 
-            if((ref2 == 0) || (loop >= 10))
-                break;
-        }*/
+        return fd;
 }
 
-int I2C_Read_Byte(uint8_t Cmd)
+
+void I2C_Write_Byte(uint8_t fd ,uint8_t Cmd, uint8_t value)
 {
-	int ref;
-        ref = i2cReadByteData (fd, (int)Cmd);
+    char * val = &value;
+    int ref0 = i2cWriteI2CBlockData(fd, Cmd, val, 1);
+    i2cWriteI2CBlockData(fd, Cmd, ptrVal, 1);
+}
+
+int I2C_Read_Byte(uint8_t fd ,uint8_t Cmd)
+{
+    int ref;
+    ref = i2cReadByteData (fd, (int)Cmd);
     return ref;
 }
 
 
-int I2C_Read_Word(uint8_t Cmd)
+int I2C_Read_Word(uint8_t fd, uint8_t Cmd)
 {
-	int ref;
-        ref = i2cReadWordData (fd, (int)Cmd);
+        int ref;
+        ref = i2cReadWordData (fd, (int) Cmd);
     return ref;
 }
 

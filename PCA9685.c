@@ -27,6 +27,7 @@
      * Example:
      * PCA9685_WriteByte(0x00, 0xff);
      */
+
     static void PCA9685_WriteByte(UBYTE reg, UBYTE value)
     {
         I2C_Write_Byte(reg, value);
@@ -74,10 +75,11 @@
      * Example:
      * PCA9685_Init(0x40);
      */
-    void PCA9685_Init(char addr)
+    UBYTE PCA9685_Init(char addr)
     {
-        DEV_I2C_Init(addr);
+        UBYTE fd = DEV_I2C_Init(addr);
         I2C_Write_Byte(MODE1, 0x00);
+        return fd;
     }
 
     /**

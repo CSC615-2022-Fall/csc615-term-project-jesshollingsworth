@@ -29,9 +29,9 @@
 extern int INT_PIN;//4
 /*------------------------------------------------------------------------------------------------------*/
 uint8_t DEV_ModuleInit(void);
-void    DEV_ModuleExit(void);
+void DEV_ModuleExit(void);
 
-void DEV_I2C_Init(uint8_t Add);
+UBYTE DEV_I2C_Init(uint8_t Add);
 void I2C_Write_Byte(uint8_t Cmd, uint8_t value);
 int I2C_Read_Byte(uint8_t Cmd);
 int I2C_Read_Word(uint8_t Cmd);

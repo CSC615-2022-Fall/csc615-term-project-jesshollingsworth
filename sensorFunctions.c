@@ -15,9 +15,19 @@
 * shared across multiple source files. 
 * 
 **************************************************************/ 
-
+#include <stdio.h>
 #include "sensorFunctions.h"
 
 // shared (using extern) global variables set by our sensors go here
-int leftTapeLineSensor;
 int rightTapeLineSensor;
+int leftTapeLineSensor;
+
+
+void initAllSensorsTo(int currState){
+    rightTapeLineSensor = currState;
+    leftTapeLineSensor = currState;
+}
+
+void leftLineSensorUpdaterThread(){
+    
+}

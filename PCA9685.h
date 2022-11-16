@@ -48,7 +48,7 @@
 #define PCA_CHANNEL_14      14
 #define PCA_CHANNEL_15      15
 
-void PCA9685_Init(char addr);
+UBYTE PCA9685_Init(char addr);
 void PCA9685_SetPWMFreq(UWORD freq);
 void PCA9685_SetPwmDutyCycle(UBYTE channel, UWORD pulse);
 void PCA9685_SetLevel(UBYTE channel, UWORD value);

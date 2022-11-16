@@ -18,4 +18,7 @@
 extern int leftTapeLineSensor;
 extern int rightTapeLineSensor;
 
+void initAllSensorsTo(int currState);
+void leftLineSensorUpdaterThread();
+
 #endif

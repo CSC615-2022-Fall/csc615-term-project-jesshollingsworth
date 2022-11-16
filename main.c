@@ -1,8 +1,8 @@
 /************************************************************** 
 * Class:  CSC-615-01 Fall 2022 
-* Name: Tony Huang, Christopher Ling
-* Student ID: 915090688, 918266861 
-* Github ID: tzphuang, dslayer1392
+* Name: Tony Huang
+* Student ID: 915090688 
+* Github ID: tzphuang
 * Project: Group Term Project
 * 
 * File: main.c
@@ -20,9 +20,82 @@
 #include <pigpio.h>
 
 #include "main.h"
+#include "motorDriver.h"
+#include "sensorFunctions.h"
+#include "DEV_Config.h"
+#include "PCA9685.h"
 
 int main(int argc, char *argv[]) {
+    //printf("Hello World!\n");
+    int speed = 0;
 
+    if (gpioInitialise() < 0)
+    {
+        fprintf(stderr, "pigpio initialisation failed\n");
+        return 1;
+    }
+
+    UBYTE motorHat1FD = PCA9685_Init(MOTORHAT1ADDRESS);
+    UBYTE motorHat2FD = PCA9685_Init(MOTORHAT2ADDRESS);
+
+    printf("Motorhat1: %d\n",motorHat1FD);
+    printf("Motorhat2: %d\n",motorHat2FD);
+
+    // //testing motors to see if they run properly
+    // for(int numLoops = 0; numLoops < 6; numLoops++){
+    //     //turn on motor to max speed
+    //     speed = 100;
+    //     // PCA9685_SetPwmDutyCycle(PWMA, speed); //for motor1
+    //     // PCA9685_SetPwmDutyCycle(PWMB, speed); //for motor2
+    //     setAllMotorsTo(speed);
+
+    //     //set motor to forwards
+    //     //let us say this is forward
+    //     // PCA9685_SetLevel(AIN1, 0); //make sure MA1 is off
+    //     // PCA9685_SetLevel(AIN2, 1); //make sure MA2 is on
+    //     driveForward();
+
+    //     //slow down the motor until the motor speed is 0
+    //     while(speed > 0){
+    //         if(speed < 0){
+    //             speed = 0;
+    //         }
+    //         speed -= 5;
+    //         //PCA9685_SetPwmDutyCycle(PWMA, speed);
+    //         setAllMotorsTo(speed);
+    //         time_sleep(.2);
+
+    //     }
+
+    //     //stop the motor for 1 second
+    //     time_sleep(1);
+
+    //     //set motor to backwards
+    //     //let us say this is backward
+    //     // PCA9685_SetLevel(AIN1, 1); //make sure MA1 is on
+    //     // PCA9685_SetLevel(AIN2, 0); //make sure MA2 is off
+    //     driveBackward();
+
+
+    //     //speed up the motor until the motor speed is 100
+    //     while(speed < 100){
+    //         if(speed > 100){
+    //             speed = 100;
+    //         }
+
+    //         speed += 5;
+    //         //PCA9685_SetPwmDutyCycle(PWMA, speed);
+    //         setAllMotorsTo(speed);
+    //         time_sleep(.2);
+    //     }
+
+    //     //after this cycle reset the speed to 0
+    //     speed = 0;
+    //     //PCA9685_SetPwmDutyCycle(PWMA, speed);
+    //     setAllMotorsTo(speed);
+    //     time_sleep(1);
+    // }
+    
     return 0;
 }
 

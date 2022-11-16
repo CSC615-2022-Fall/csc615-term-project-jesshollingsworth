@@ -16,8 +16,8 @@
 #ifndef MAIN
 #define MAIN
 
-#define PIN_ON 1
-#define PIN_OFF 0
+#define ON 1
+#define OFF 0
 
 //example of a function we may want to implement into the main.c file
 void initializeGpioPins();
