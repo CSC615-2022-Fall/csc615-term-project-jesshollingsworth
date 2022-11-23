@@ -35,14 +35,16 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    UBYTE motorHat1FD = PCA9685_Init(MOTORHAT1ADDRESS);
-    UBYTE motorHat2FD = PCA9685_Init(MOTORHAT2ADDRESS);
+//    UBYTE motorHat1FD = PCA9685_Init(MOTORHAT1ADDRESS);
+//    printf("%X\n", motorHat1FD);
+
+//    UBYTE motorHat2FD = PCA9685_Init(MOTORHAT2ADDRESS);
 
     // printf("Motorhat1: %d\n",motorHat1FD);
     // printf("Motorhat2: %d\n",motorHat2FD);
 
     //testing motors to see if they run properly
-    for(int numLoops = 0; numLoops < 6; numLoops++){
+/*    for (int numLoops = 0; numLoops < 1; numLoops++) {
         //turn on motor to max speed
         speed = 100;
         // PCA9685_SetPwmDutyCycle(PWMA, speed); //for motor1
