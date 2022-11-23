@@ -28,9 +28,9 @@
      * PCA9685_WriteByte(0x00, 0xff);
      */
 
-    static void PCA9685_WriteByte(UBYTE fd,UBYTE reg, UBYTE value)
+    static void PCA9685_WriteByte(uint8_t handle, UBYTE reg, UBYTE value)
     {
-        I2C_Write_Byte(fd, reg, value);
+        I2C_Write_Byte(handle, reg, value);
     }
 
     /**
@@ -57,12 +57,12 @@
      * Example:
      * PCA9685_SetPWM(0, 0, 4095);
      */
-    static void PCA9685_SetPWM(UBYTE fd, UBYTE channel, UWORD on, UWORD off)
+    static void PCA9685_SetPWM(UBYTE handle, UBYTE channel, UWORD on, UWORD off)
     {
-        PCA9685_WriteByte(fd, LED0_ON_L + 4*channel, on & 0xFF);
-        PCA9685_WriteByte(fd, LED0_ON_H + 4*channel, on >> 8);
-        PCA9685_WriteByte(fd, LED0_OFF_L + 4*channel, off & 0xFF);
-        PCA9685_WriteByte(fd, LED0_OFF_H + 4*channel, off >> 8);
+        PCA9685_WriteByte(handle, LED0_ON_L + 4*channel, on & 0xFF);
+        PCA9685_WriteByte(handle, LED0_ON_H + 4*channel, on >> 8);
+        PCA9685_WriteByte(handle, LED0_OFF_L + 4*channel, off & 0xFF);
+        PCA9685_WriteByte(handle, LED0_OFF_H + 4*channel, off >> 8);
     }
 
     /**
@@ -75,11 +75,11 @@
      * Example:
      * PCA9685_Init(0x40);
      */
-    UBYTE PCA9685_Init(char addr)
+    int PCA9685_Init(char addr)
     {
-        UBYTE fd = DEV_I2C_Init(addr);
-        I2C_Write_Byte(fd, MODE1, 0x00);
-        return fd;
+        int handle = DEV_I2C_Init(addr);
+        I2C_Write_Byte(handle, MODE1, 0x00);
+        return handle;
     }
 
     /**
@@ -125,9 +125,9 @@
      * Example:
      * PCA9685_SetPwmDutyCycle(1, 100);
      */
-    void PCA9685_SetPwmDutyCycle(UBYTE fd, UBYTE channel, UWORD pulse)
+    void PCA9685_SetPwmDutyCycle(UBYTE handle, UBYTE channel, UWORD pulse)
     {
-        PCA9685_SetPWM(fd, channel, 0, pulse * (4096 / 100) - 1);
+        PCA9685_SetPWM(handle, channel, 0, pulse * (4096 / 100) - 1);
     }
 
     /**
@@ -139,10 +139,10 @@
      * Example:
      * PCA9685_SetLevel(3, 1);
      */
-    void PCA9685_SetLevel(UBYTE fd, UBYTE channel, UWORD value)
+    void PCA9685_SetLevel(UBYTE handle, UBYTE channel, UWORD value)
     {
         if (value == 1)
-            PCA9685_SetPWM(fd, channel, 0, 4095);
+            PCA9685_SetPWM(handle, channel, 0, 4095);
         else
-            PCA9685_SetPWM(fd, channel, 0, 0);
+            PCA9685_SetPWM(handle, channel, 0, 0);
     }

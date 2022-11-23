@@ -20,6 +20,7 @@
 #include <pigpio.h>
 
 #include "main.h"
+#include "motors.h"
 #include "motorDriver.h"
 #include "sensorFunctions.h"
 #include "DEV_Config.h"
@@ -27,7 +28,7 @@
 
 int main(int argc, char *argv[]) {
     //printf("Hello World!\n");
-    int speed = 0;
+    //int speed = 0;
 
     if (gpioInitialise() < 0)
     {
@@ -104,8 +105,16 @@ int main(int argc, char *argv[]) {
         setAllMotorsTo(motorHat1FD, speed);
         setAllMotorsTo(motorHat2FD, speed);
         time_sleep(1);
-    }
-    
+    }*/
+
+    initMotors();
+    moveForward(100);
+    time_sleep(2);
+    moveForward(50);
+    time_sleep(2);
+    moveForward(0);
+    uninitMotors();
+
     return 0;
 }
 

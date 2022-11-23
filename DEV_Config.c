@@ -13,7 +13,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <pigpio.h>
-uint32_t fd;
+uint32_t handle;
 int INT_PIN;
 /******************************************************************************
 function:	Equipment Testing
@@ -126,21 +126,21 @@ function:	I2C Function initialization and transfer
 parameter:
 Info:
 ******************************************************************************/
-UBYTE DEV_I2C_Init(uint8_t Add) // Add is hexadex i2c address
+int DEV_I2C_Init(uint8_t Add) // Add is hexadex i2c address
 {
-        printf("Pigpio I2C Device\n");
-        fd = i2cOpen(1,Add,0);
-        printf("fd = %d\n", fd);
-        return fd;
+    printf("Pigpio I2C Device\n");
+    handle = i2cOpen(1,Add,0);
+    printf("fd = %d\n", handle);
+    return handle;
 }
 
 
-void I2C_Write_Byte(uint8_t fd ,uint8_t Cmd, uint8_t value)
+void I2C_Write_Byte(uint8_t handle ,uint8_t Cmd, uint8_t value)
 {
     //char curVal = (char) value;
     char val[1];
     val[0] = value;
-    i2cWriteI2CBlockData(fd, Cmd, val, 1);
+    i2cWriteI2CBlockData(handle, Cmd, val, 1);
 }
 
 int I2C_Read_Byte(uint8_t fd ,uint8_t Cmd)
@@ -153,8 +153,8 @@ int I2C_Read_Byte(uint8_t fd ,uint8_t Cmd)
 
 int I2C_Read_Word(uint8_t fd, uint8_t Cmd)
 {
-        int ref;
-        ref = i2cReadWordData (fd, (int) Cmd);
+    int ref;
+    ref = i2cReadWordData (fd, (int) Cmd);
     return ref;
 }
 
@@ -180,6 +180,6 @@ Info:
 ******************************************************************************/
 void DEV_ModuleExit(void)
 {
- // gpioTerminate();
-  i2cClose(fd);
+    //gpioTerminate();
+    i2cClose(handle);
 }

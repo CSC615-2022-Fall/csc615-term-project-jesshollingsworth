@@ -31,7 +31,7 @@ extern int INT_PIN;//4
 uint8_t DEV_ModuleInit(void);
 void DEV_ModuleExit(void);
 
-UBYTE DEV_I2C_Init(uint8_t Add);
+int DEV_I2C_Init(uint8_t Add);
 void I2C_Write_Byte(UBYTE fd, uint8_t Cmd, uint8_t value);
 int I2C_Read_Byte(UBYTE fd, uint8_t Cmd);
 int I2C_Read_Word(UBYTE fd, uint8_t Cmd);
