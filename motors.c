@@ -3,7 +3,6 @@
 int FRONT_HAT_HANDLE;
 int BACK_HAT_HANDLE;
 
-
 void initMotors() {
     FRONT_HAT_HANDLE = PCA9685_Init(FRONT_HAT_ADDRESS);
     BACK_HAT_HANDLE = PCA9685_Init(BACK_HAT_ADDRESS);
@@ -14,7 +13,6 @@ void uninitMotors() {
     i2cClose(FRONT_HAT_HANDLE);
     i2cClose(BACK_HAT_HANDLE);
 }
-
 
 void setMotor(uint8_t hat, uint8_t wheel, int16_t speed) {
 
@@ -104,4 +102,3 @@ void turnLeft(int16_t speed) {
     setMotor(BACK_HAT_ADDRESS, LEFT_WHEEL, speed);
     setMotor(BACK_HAT_ADDRESS, RIGHT_WHEEL, (int16_t)(-speed));
 }
-
