@@ -14,7 +14,12 @@
 #ifndef __PCA9685_H_
 #define __PCA9685_H_
 
-#include "DEV_Config.h"
+#include <stdint.h>
+
+#define UBYTE   uint8_t
+#define UWORD   uint16_t
+#define UDOUBLE uint32_t
+
 
 //GPIO config
 #define SUBADR1             0x02

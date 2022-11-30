@@ -18,6 +18,34 @@
     #include <stdio.h>
     #include <pigpio.h>
     #include <unistd.h> //for usleep
+
+
+
+    int DEV_I2C_Init(uint8_t Add) // Add is hexadex i2c address
+    {
+
+        return i2cOpen(1,Add,0);
+
+    }
+
+
+    void I2C_Write_Byte(uint8_t handle ,uint8_t Cmd, uint8_t value)
+    {
+        char val[1];
+        val[0] = value;
+        i2cWriteI2CBlockData(handle, Cmd, val, 1);
+    }
+
+    int I2C_Read_Byte(uint8_t fd ,uint8_t Cmd)
+    {
+        int ref;
+        ref = i2cReadByteData (fd, (int)Cmd);
+        return ref;
+    }
+
+
+
+
     /**
      * Write bytes in PCA9685
      *

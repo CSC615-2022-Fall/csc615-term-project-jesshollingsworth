@@ -3,11 +3,14 @@
 
 #include <stdint-gcc.h>
 #include <PCA9685.h>
+#include <pigpio.h>
 
 #define FRONT_HAT_ADDRESS   0x40
 #define BACK_HAT_ADDRESS    0x50
 #define LEFT_WHEEL          0x00
 #define RIGHT_WHEEL         0x05
+#define MOTOR_SPEED         80
+
 
 #define FORWARD             1
 #define BACKWARD            0
@@ -21,20 +24,19 @@
 //#define BIN1 PCA_CHANNEL_3
 //#define BIN2 PCA_CHANNEL_4
 
-//uint16_t SPEED = 0;
 
 void initMotors();
 void uninitMotors();
 
-void setSpeed(uint16_t speed);
 
-void setMotor(uint8_t hat, uint8_t channel, uint16_t direction, uint16_t speed);
+void setMotor(uint8_t hat, uint8_t channel, int16_t speed);
 
-void moveForward(uint16_t speed);
-void moveBackward();
-void moveLeft();
-void moveRight();
-void turnLeft();
-void turnRight();
+void moveForward(int16_t speed);
+void moveBackward(int16_t speed);
+void moveLeft(int16_t speed);
+void moveRight(int16_t speed);
+void turnLeft(int16_t speed);
+void turnRight(int16_t speed);
+void stopMotors();
 
 #endif //CSC615_TERM_PROJECT_JESSHOLLINGSWORTH_MOTORS_H
