@@ -2,8 +2,8 @@
 #include <PCA9685.h>
 #include <pigpio.h>
 
-#define FRONT_HAT_ADDRESS   0x40
-#define BACK_HAT_ADDRESS    0x50
+#define FRONT_HAT_ADDRESS   0x50
+#define BACK_HAT_ADDRESS    0x40
 #define LEFT_WHEEL          0x00
 #define RIGHT_WHEEL         0x05
 #define MOTOR_SPEED         80
@@ -29,4 +29,5 @@ void moveLeft(int16_t speed);
 void moveRight(int16_t speed);
 void turnLeft(int16_t speed);
 void turnRight(int16_t speed);
+void turnLeftAROUND(int16_t speed);
 void stopMotors();

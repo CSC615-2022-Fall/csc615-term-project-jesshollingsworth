@@ -1,11 +1,22 @@
+#ifndef SENSORS_H
+#define SENSORS_H
+
 #include <pigpio.h>
 
-int continue_loop = 1;
+typedef struct distanceSensor {
+    int echo;
+    int trig;
+    double value;
+} distanceSensor;
 
 typedef struct sensor {
     int pin;
     int status;
 } Sensor;
 
-int stopSensing ();
+void stopSensing ();
 void * sense (void * ptr);
+void * read_distance(void * args);
+
+#endif
+

@@ -42,69 +42,78 @@
 #define RESET "\033[0m"
 #define ERASE "\033[A\033[2K"
 
-int continue_loop = 1;
-
 void mainInit();
 void mainUninit();
 void sigintHandler(int sig);
 
-const int16_t MAIN_SPEED = 80;
+const int16_t MAIN_SPEED = 45;
+pthread_t left_thread;
+pthread_t midl_thread;
+pthread_t rigt_thread;
+Sensor left_sensor = {LEFT_PIN, 0};
+Sensor midl_sensor = {MIDL_PIN, 0};
+Sensor rigt_sensor = {RIGT_PIN, 0};
+distanceSensor front_sensor = {ECHO_PIN, TRIG_PIN, 0};
+pthread_t front_thread;
+
+int continue_lop = 1;
+
 
 int main(int argc, char *argv[]) {
     mainInit();
 
-/*
-    moveForward(MAIN_SPEED);
-    sleep(1);
-    moveBackward(MAIN_SPEED);
-    sleep(1);
-    turnRight(MAIN_SPEED);
-    sleep(2);
-    turnLeft(MAIN_SPEED);
-    sleep(2);
-    moveRight(MAIN_SPEED);
-    sleep(1);
-    moveLeft(MAIN_SPEED);
-    sleep(1);
-*/
-    
-    Sensor left_sensor = {LEFT_PIN, 0};
-    Sensor * left_sensor_ptr = &left_sensor;
+    /*
+    // send trigger signal
+    gpioWrite(TRIG_PIN, 1);
+    gpioDelay(10);
+    gpioWrite(TRIG_PIN, 0);
 
-    Sensor midl_sensor = {MIDL_PIN, 0};
-    Sensor * midl_sensor_ptr = &midl_sensor;
+    // wait for ECHO pin pullup
+    while (gpioRead(ECHO_PIN) == 0) { ; }
 
-    Sensor rigt_sensor = {RIGT_PIN, 0};
-    Sensor * rigtt_sensor_ptr = &rigt_sensor;
+    // start relative timer
+    uint32_t micro_seconds_start = gpioTick();
 
-    pthread_t left_thread, midl_thread, rigt_thread;
-    if (pthread_create(&left_thread, NULL, sense, (void *)left_sensor_ptr) != 0)
+    // wait for echo pin pulldown
+    while (gpioRead(ECHO_PIN) == 1) { ; }
+
+    // count elapsed microseconds since ECHO pin pullup
+    uint32_t micro_echo_time = gpioTick() - micro_seconds_start;
+
+    double distance = micro_echo_time * 0.017;
+    printf("distance: %f\n", distance);
+    */
+
+    while(continue_lop)
         {
-        printf("failed to create thread\n");
-        }
-    if (pthread_create(&midl_thread, NULL, sense, (void *)midl_sensor_ptr) != 0)
-        {
-        printf("failed to create thread\n");
-        }
-    if (pthread_create(&rigt_thread, NULL, sense, (void *)rigt_sensor_ptr) != 0)
-        {
-        printf("failed to create thread\n");
-        }
+        /*
+        turnLeftAROUND(MAIN_SPEED);
 
-
-    while(continue_loop)
-        {
-            printf("LEFT LINE SENSOR:\t\t%s\n",
-                (left_sensor.status) ? RED "NOT DETECTED" RESET : GREEN "DETECTED" RESET);
+        while (midl_sensor.status)
+            {
+            printf("should move forward\n");
+            moveForward(MAIN_SPEED);
             }
-            printf("MIDL LINE SENSOR:\t\t%s\n",
-                (midl_sensor.status) ? RED "NOT DETECTED" RESET : GREEN "DETECTED" RESET);
+        if (rigt_sensor.status)
+            {
+            printf("should move right\n");
+            while (!midl_sensor.status)
+                {
+                turnRight(MAIN_SPEED / (3);
+                }
             }
-            printf("RIGT LINE SENSOR:\t\t%s\n",
-                (rigt_sensor.status) ? RED "NOT DETECTED" RESET : GREEN "DETECTED" RESET);
+        if (left_sensor.status)
+            {
+            printf("should move left\n");
+            while (!midl_sensor.status)
+                {
+                turnLeft(MAIN_SPEED / 3);
+                }
             }
-            sleep(.5);
-            printf(ERASE ERASE ERASE);
+
+        usleep(10000);
+        printf(ERASE);
+        */
         }
 
     mainUninit();
@@ -118,9 +127,27 @@ void mainInit() {
     }
     initMotors();
     signal(SIGINT, sigintHandler);
+    if (pthread_create(&left_thread, NULL, sense, &left_sensor) != 0) {
+        printf("failed to create left thread\n");
+    }
+    if (pthread_create(&midl_thread, NULL, sense, &midl_sensor) != 0) {
+        printf("failed to create middle thread\n");
+    }
+    if (pthread_create(&rigt_thread, NULL, sense, &rigt_sensor) != 0) {
+        printf("failed to create right thread\n");
+    }
+    if (pthread_create(&front_thread, NULL, read_distance, &front_sensor) != 0) {
+        printf("failed to create front thread\n");
+    }
 }
 
 void mainUninit() {
+    stopSensing();
+    continue_lop = 0;
+    pthread_join(left_thread, NULL);
+    pthread_join(midl_thread, NULL);
+    pthread_join(rigt_thread, NULL);
+    pthread_join(front_thread, NULL);
     uninitMotors();
     gpioTerminate();
 }
@@ -129,8 +156,6 @@ void sigintHandler(int sig) {
     if (sig == SIGINT) {
         printf("\nCTRL-C received. Exiting...\n");
         mainUninit();
-        stopSensing();
-        continue_loop = 0;
         exit(0);
     }
 }

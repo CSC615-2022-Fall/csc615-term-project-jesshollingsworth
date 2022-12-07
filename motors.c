@@ -72,7 +72,7 @@ void moveBackward(int16_t speed) {
 }
 
 // left motors spin inward, right motors spin outward
-void moveRight(int16_t speed) {
+void moveLeft(int16_t speed) {
     setMotor(FRONT_HAT_ADDRESS, LEFT_WHEEL, speed);
     setMotor(FRONT_HAT_ADDRESS, RIGHT_WHEEL, (int16_t)(-speed));
     setMotor(BACK_HAT_ADDRESS, LEFT_WHEEL, (int16_t)(-speed));
@@ -80,7 +80,7 @@ void moveRight(int16_t speed) {
 }
 
 // left motors spin outward, right motors spin inward
-void moveLeft(int16_t speed) {
+void moveRight(int16_t speed) {
     setMotor(FRONT_HAT_ADDRESS, LEFT_WHEEL,(int16_t)(-speed));
     setMotor(FRONT_HAT_ADDRESS, RIGHT_WHEEL, speed);
     setMotor(BACK_HAT_ADDRESS, LEFT_WHEEL, speed);
@@ -101,4 +101,9 @@ void turnLeft(int16_t speed) {
     setMotor(FRONT_HAT_ADDRESS, RIGHT_WHEEL, (int16_t)(-speed));
     setMotor(BACK_HAT_ADDRESS, LEFT_WHEEL, speed);
     setMotor(BACK_HAT_ADDRESS, RIGHT_WHEEL, (int16_t)(-speed));
+}
+
+void turnLeftAROUND(int16_t speed) {
+    setMotor(BACK_HAT_ADDRESS, LEFT_WHEEL, (int16_t)(-speed));
+    setMotor(BACK_HAT_ADDRESS, RIGHT_WHEEL, speed);
 }
