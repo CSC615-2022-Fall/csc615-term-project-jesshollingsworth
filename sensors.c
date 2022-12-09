@@ -18,21 +18,18 @@ void *sense(void *ptr) {
     return NULL;
 }
 
-
 void *read_distance(void *args) {
     double distance;
 
     distanceSensor * arg_ptr  = (distanceSensor*) args;
 
     while (continue_loop) {
-        usleep(333333);
+        usleep(100000);
 // send trigger signal
-        gpioWrite(arg_ptr->trig, 1);
-        gpioDelay(10);
-        gpioWrite(arg_ptr->trig, 0);
+        gpioTrigger(arg_ptr->trig, 10, 1);
 
 // wait for ECHO pin pullup
-        while (gpioRead(arg_ptr->echo) == 1) { ; }
+        while (gpioRead(arg_ptr->echo) == 0) { ; }
 
 // start relative timer
         uint32_t micro_seconds_start = gpioTick();
@@ -43,12 +40,10 @@ void *read_distance(void *args) {
 // count elapsed microseconds since ECHO pin pullup
         uint32_t micro_echo_time = gpioTick() - micro_seconds_start;
 
-        distance = micro_echo_time * 0.017;
+       distance = micro_echo_time * 0.017;
 //							 ^^ conversion constant
 
-        printf("%f\n", distance);
         arg_ptr->value = distance;
-
 
     }
 

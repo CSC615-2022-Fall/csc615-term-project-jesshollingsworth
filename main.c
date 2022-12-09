@@ -62,27 +62,6 @@ int continue_lop = 1;
 int main(int argc, char *argv[]) {
     mainInit();
 
-    /*
-    // send trigger signal
-    gpioWrite(TRIG_PIN, 1);
-    gpioDelay(10);
-    gpioWrite(TRIG_PIN, 0);
-
-    // wait for ECHO pin pullup
-    while (gpioRead(ECHO_PIN) == 0) { ; }
-
-    // start relative timer
-    uint32_t micro_seconds_start = gpioTick();
-
-    // wait for echo pin pulldown
-    while (gpioRead(ECHO_PIN) == 1) { ; }
-
-    // count elapsed microseconds since ECHO pin pullup
-    uint32_t micro_echo_time = gpioTick() - micro_seconds_start;
-
-    double distance = micro_echo_time * 0.017;
-    printf("distance: %f\n", distance);
-    */
 
     while(continue_lop)
         {
@@ -99,7 +78,7 @@ int main(int argc, char *argv[]) {
             printf("should move right\n");
             while (!midl_sensor.status)
                 {
-                turnRight(MAIN_SPEED / (3);
+                turnRight(MAIN_SPEED / (3));
                 }
             }
         if (left_sensor.status)
