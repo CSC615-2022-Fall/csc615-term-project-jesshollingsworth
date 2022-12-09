@@ -42,11 +42,16 @@
 #define RESET "\033[0m"
 #define ERASE "\033[A\033[2K"
 
+#define DISTANCE_THRESHOLD 15
+
 void mainInit();
 void mainUninit();
 void sigintHandler(int sig);
+void wait_for_button();
 
-const int16_t MAIN_SPEED = 45;
+int16_t MAIN_SPEED = 80;
+int16_t SLOW_SPEED = 60;
+
 pthread_t left_thread;
 pthread_t midl_thread;
 pthread_t rigt_thread;
@@ -58,59 +63,79 @@ pthread_t front_thread;
 
 int continue_lop = 1;
 
-
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+    {
     mainInit();
 
+    // wait_for_button();
 
-    while(continue_lop)
+/*    if (argc > 2)
         {
-        moveForward(MAIN_SPEED / 2);
+        MAIN_SPEED = strtoi(argv[0], NULL, 10);
+        SLOW_SPEED = strtoi(argv[1], NULL, 10);
+        }*/
 
-        while (midl_sensor.status)
+    while (continue_lop)
+        {
+        printf("main_loop, distance: %f\n", front_sensor.value);
+        while (front_sensor.value > DISTANCE_THRESHOLD)
             {
-            printf("should move forward\n");
-            moveForward(MAIN_SPEED);
-            printf("read %f\n", front_sensor.value);
-            while (front_sensor.value < 25) {
-
-                /*
-                while (front_sensor.value < 25) {
-                    printf("should move left%f\n", front_sensor.value);
-                    moveLeft(MAIN_SPEED / 2);
-                }
-                if (front_sensor.value > 25) {
-                    sleep(3);
-                    printf("should turn left around %f\n", front_sensor.value);
-                    turnRight(MAIN_SPEED / 2);
-                    sleep(1);
-                    moveLeft(MAIN_SPEED / 2);
-                    sleep(6);
-                }
-                */
-
-            }
-
-            }
-        if (rigt_sensor.status)
-            {
-            printf("should move right\n");
-            while (!midl_sensor.status)
+            while (midl_sensor.status)
                 {
-                turnRight(MAIN_SPEED / (3));
+                printf("MOVING FORWARD, distance: %f\n", front_sensor.value);
+                moveForward(MAIN_SPEED);
+                if (front_sensor.value < DISTANCE_THRESHOLD)
+                    {
+                    break;
+                    }
+                printf(ERASE);
                 }
-            }
-        if (left_sensor.status)
-            {
-            printf("should move left\n");
-            while (!midl_sensor.status)
+            if (rigt_sensor.status)
                 {
-                turnLeft(MAIN_SPEED / 3);
+                while (!midl_sensor.status)
+                    {
+                    printf("TURNING RIGHT, distance: %f\n", front_sensor.value);
+                    //moveRight(SLOW_SPEED);
+                    //usleep(250000);
+                    turnRight( SLOW_SPEED);
+                    printf(ERASE);
+                    if (front_sensor.value < DISTANCE_THRESHOLD)
+                        {
+                        break;
+                        }
+                    }
+                }
+            if (left_sensor.status)
+                {
+                while (!midl_sensor.status)
+                    {
+                    printf("TURNING LEFT, distance: %f\n", front_sensor.value);
+                    //moveLeft(SLOW_SPEED);
+                    //usleep(250000);
+                    turnLeft(SLOW_SPEED);
+                    //driftLeftTest(MAIN_SPEED);
+                    printf(ERASE);
+                    if (front_sensor.value < DISTANCE_THRESHOLD)
+                        {
+                        break;
+                        }
+                    }
                 }
             }
+        stopMotors();
+        sleep(1);
 
-        usleep(10000);
-        printf(ERASE);
+        printf("obstacle maneuver\n");
+
+        moveRight(MAIN_SPEED);
+        usleep(1300000);
+        moveForward(MAIN_SPEED);
+        usleep(1600000);
+        while (!midl_sensor.status)
+            {
+            moveLeft(SLOW_SPEED);
+            }
+        printf("done obstacle maneuver\n");
         }
 
     mainUninit();
@@ -120,7 +145,8 @@ int main(int argc, char *argv[]) {
 void mainInit() {
     if (gpioInitialise() == PI_INIT_FAILED)
     {
-        exit(1);
+        printf("unable to initialize pigpio\n");
+        exit(PI_INIT_FAILED);
     }
     initMotors();
     signal(SIGINT, sigintHandler);
@@ -139,20 +165,35 @@ void mainInit() {
 }
 
 void mainUninit() {
+    printf("main uninit\n");
     stopSensing();
     continue_lop = 0;
     pthread_join(left_thread, NULL);
     pthread_join(midl_thread, NULL);
     pthread_join(rigt_thread, NULL);
     pthread_join(front_thread, NULL);
+    printf("all threads joined\n");
     uninitMotors();
     gpioTerminate();
+    printf("gpio terminated\n");
 }
 
 void sigintHandler(int sig) {
     if (sig == SIGINT) {
+        stopMotors();
         printf("\nCTRL-C received. Exiting...\n");
         mainUninit();
         exit(0);
     }
 }
+
+void wait_for_button()
+    {
+    gpioSetMode(BUTT_PIN, PI_INPUT);
+    printf("waiting for button press\n");
+    while (gpioRead(BUTT_PIN) == 0)
+        {
+        usleep(10000);
+        }
+    printf("button pressed\n");
+    }

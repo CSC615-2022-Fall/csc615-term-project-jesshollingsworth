@@ -18,3 +18,9 @@ clean:
 
 run: $(ROOTNAME)
 	sudo ./$(ROOTNAME)
+
+cleaner: cleaner.c
+	$(CC)  -Wall -pthread -o cleaner cleaner.c -lpigpio -lrt
+
+terminate: cleaner
+	sudo ./cleaner
