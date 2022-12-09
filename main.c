@@ -53,7 +53,7 @@ pthread_t rigt_thread;
 Sensor left_sensor = {LEFT_PIN, 0};
 Sensor midl_sensor = {MIDL_PIN, 0};
 Sensor rigt_sensor = {RIGT_PIN, 0};
-distanceSensor front_sensor = {ECHO_PIN, TRIG_PIN, 0};
+distanceSensor front_sensor = {ECHO_PIN, TRIG_PIN, 10000};
 pthread_t front_thread;
 
 int continue_lop = 1;
@@ -65,13 +65,32 @@ int main(int argc, char *argv[]) {
 
     while(continue_lop)
         {
-        /*
-        turnLeftAROUND(MAIN_SPEED);
+        moveForward(MAIN_SPEED / 2);
 
         while (midl_sensor.status)
             {
             printf("should move forward\n");
             moveForward(MAIN_SPEED);
+            printf("read %f\n", front_sensor.value);
+            while (front_sensor.value < 25) {
+
+                /*
+                while (front_sensor.value < 25) {
+                    printf("should move left%f\n", front_sensor.value);
+                    moveLeft(MAIN_SPEED / 2);
+                }
+                if (front_sensor.value > 25) {
+                    sleep(3);
+                    printf("should turn left around %f\n", front_sensor.value);
+                    turnRight(MAIN_SPEED / 2);
+                    sleep(1);
+                    moveLeft(MAIN_SPEED / 2);
+                    sleep(6);
+                }
+                */
+
+            }
+
             }
         if (rigt_sensor.status)
             {
@@ -92,7 +111,6 @@ int main(int argc, char *argv[]) {
 
         usleep(10000);
         printf(ERASE);
-        */
         }
 
     mainUninit();
