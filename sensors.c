@@ -4,20 +4,35 @@
 #include "sensors.h"
 
 int continue_loop = 1;
-uint32_t start = 0;
-uint32_t end = 0;
+uint32_t start1 = 0;
+uint32_t end1 = 0;
 
-void alertFunction (int gpio, int level, uint32_t tick)
+uint32_t start2 = 0;
+uint32_t end2 = 0;
+
+void alertFunction1 (int gpio, int level, uint32_t tick)
     {
     if (level == 1)
         {
-        start = tick;
+        start1 = tick;
         }
     if (level == 0)
         {
-        end = tick;
+        end1 = tick;
         }
     }
+
+void alertFunction2 (int gpio, int level, uint32_t tick)
+{
+    if (level == 1)
+    {
+        start2 = tick;
+    }
+    if (level == 0)
+    {
+        end2 = tick;
+    }
+}
 
 void stopSensing()
     {
@@ -38,7 +53,7 @@ void * sense (void *ptr)
     return NULL;
     }
 
-void * read_distance (void *args)
+void * read_distance1 (void *args)
     {
     double distance;
     distanceSensor * arg_ptr  = (distanceSensor*) args;
@@ -46,19 +61,41 @@ void * read_distance (void *args)
     gpioSetMode(arg_ptr->trig, PI_OUTPUT);
     while (continue_loop)
         {
-        gpioDelay(5000);
+        gpioDelay(250000);
         gpioTrigger(arg_ptr->trig, 10, 1);
-        gpioSetAlertFunc(arg_ptr->echo, alertFunction);
-        distance = 0.017 * (end - start);
+        gpioSetAlertFunc(arg_ptr->echo, alertFunction1);
+        distance = 0.017 * (end1 - start1);
         //printf("read_distance, distance: %f\n", distance);
         if (distance > 200) {
             distance = 200;
         }
         arg_ptr->value = distance;
         }
-    printf("STOP DISTANCE READING\n");
+    printf("STOP FRONT DISTANCE READING\n");
     return NULL;
     }
+
+void * read_distance2 (void *args)
+{
+    double distance;
+    distanceSensor * arg_ptr  = (distanceSensor*) args;
+    gpioSetMode(arg_ptr->echo, PI_INPUT);
+    gpioSetMode(arg_ptr->trig, PI_OUTPUT);
+    while (continue_loop)
+    {
+        gpioDelay(250000);
+        gpioTrigger(arg_ptr->trig, 10, 1);
+        gpioSetAlertFunc(arg_ptr->echo, alertFunction2);
+        distance = 0.017 * (end2 - start2);
+        //printf("read_distance, distance: %f\n", distance);
+        if (distance > 200) {
+            distance = 200;
+        }
+        arg_ptr->value = distance;
+    }
+    printf("STOP SIDE DISTANCE READING\n");
+    return NULL;
+}
 
 // wait for ECHO pin pullup
 //while (gpioRead(arg_ptr->echo) == 0) { ; }

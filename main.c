@@ -31,8 +31,11 @@
 #define RIGT_PIN 22
 
 // ultrasonic sensor pins
-#define ECHO_PIN 23
-#define TRIG_PIN 24
+#define FRONT_ECHO_PIN 23
+#define FRONT_TRIG_PIN 24
+
+#define SIDE_ECHO_PIN   5
+#define SIDE_TRIG_PIN   6
 
 // button pin(s)
 #define BUTT_PIN 25
@@ -42,15 +45,20 @@
 #define RESET "\033[0m"
 #define ERASE "\033[A\033[2K"
 
-#define DISTANCE_THRESHOLD 15
+#define DISTANCE_THRESHOLD  25
+#define ONE_TENTH_SECOND    100000
+#define ONE_FIFTH_SECOND    250000
+#define ONE_HALF_SECOND     500000
+#define ONE_SECOND          1000000
+#define TWO_SECONDS         2000000
 
 void mainInit();
 void mainUninit();
 void sigintHandler(int sig);
 void wait_for_button();
 
-int16_t MAIN_SPEED = 80;
-int16_t SLOW_SPEED = 60;
+int16_t MAIN_SPEED = 65;
+int16_t SLOW_SPEED = 45;
 
 pthread_t left_thread;
 pthread_t midl_thread;
@@ -58,8 +66,10 @@ pthread_t rigt_thread;
 Sensor left_sensor = {LEFT_PIN, 0};
 Sensor midl_sensor = {MIDL_PIN, 0};
 Sensor rigt_sensor = {RIGT_PIN, 0};
-distanceSensor front_sensor = {ECHO_PIN, TRIG_PIN, 10000};
+distanceSensor front_sensor = {FRONT_ECHO_PIN, FRONT_TRIG_PIN, 200};
 pthread_t front_thread;
+distanceSensor side_sensor = {SIDE_ECHO_PIN, SIDE_TRIG_PIN, 200};
+pthread_t side_thread;
 
 int continue_lop = 1;
 
@@ -67,7 +77,102 @@ int main(int argc, char *argv[])
     {
     mainInit();
 
-    // wait_for_button();
+    wait_for_button();
+
+    uint32_t timeout = 0;
+
+    int turns_since_straight = 0;
+
+    while (1) {
+        if (midl_sensor.status) {
+            if (front_sensor.value < DISTANCE_THRESHOLD) {
+                stopMotors();
+                while (front_sensor.value - DISTANCE_THRESHOLD < 5) {
+                    moveLeft(SLOW_SPEED);
+                }
+                usleep(ONE_SECOND);
+                stopMotors();
+                usleep(ONE_HALF_SECOND);
+                moveForward(SLOW_SPEED);
+                double min_side_distance = 200;
+                while (side_sensor.value > 50) { ; }
+                min_side_distance = side_sensor.value;
+                while (side_sensor.value - min_side_distance < 5) { ; }
+                usleep(ONE_SECOND);
+                while (!midl_sensor.status) {
+                    moveRight(SLOW_SPEED);
+                }
+                moveForward(MAIN_SPEED);
+                timeout = 0;
+                turns_since_straight = 0;
+                continue;
+            }
+            moveForward(MAIN_SPEED);
+            printf("moving forward\n");
+            timeout = 0;
+            turns_since_straight = 0;
+        }
+        else if (!left_sensor.status && !rigt_sensor.status) {
+            if (timeout) {
+                printf("timeout: %u\n", gpioTick() - timeout);
+            }
+            if ((timeout != 0) && ((gpioTick() - timeout) >= TWO_SECONDS)) {
+                stopMotors();
+                sleep(1);
+//                int turnTime = ONE_TENTH_SECOND;
+//                for (int i = 0; i < 3; i++) {
+//                    if (i % 2) {
+//                        turnRight(100);
+//                        usleep(turnTime += ONE_FIFTH_SECOND);
+//                    }
+//                    else {
+//                        turnLeft(100);
+//                        usleep(turnTime += ONE_FIFTH_SECOND);
+//                    }
+//                }
+//                turnRight(100);
+//                sleep(2);
+                moveBackward(100);
+                usleep(ONE_HALF_SECOND);
+                break;
+            }
+            usleep(ONE_TENTH_SECOND);
+            if (timeout == 0) {
+                timeout = gpioTick();
+                printf("gpioTick(): %u\n", timeout);
+            }
+            continue;
+        }
+//        else if (left_sensor.status && rigt_sensor.status) {
+//            usleep(ONE_TENTH_SECOND);
+//            timeout = 0;
+//            continue;
+//        }
+        else if (left_sensor.status) {
+            turnLeft(SLOW_SPEED);
+            printf("turning left\n");
+            usleep(ONE_TENTH_SECOND);
+            printf("turns: %d\n", turns_since_straight);
+            if (turns_since_straight++ >= 8) {
+                moveBackward(MAIN_SPEED);
+                usleep(ONE_TENTH_SECOND);
+
+            }
+            timeout = 0;
+        }
+        else if (rigt_sensor.status) {
+            turnRight(SLOW_SPEED);
+            printf("turning right\n");
+            usleep(ONE_TENTH_SECOND);
+            printf("turns: %d\n", turns_since_straight);
+            if (turns_since_straight++ >= 8) {
+                moveBackward(MAIN_SPEED);
+                usleep(ONE_TENTH_SECOND);
+            }
+            timeout = 0;
+        }
+    }
+
 
 /*    if (argc > 2)
         {
@@ -75,6 +180,7 @@ int main(int argc, char *argv[])
         SLOW_SPEED = strtoi(argv[1], NULL, 10);
         }*/
 
+/*
     while (continue_lop)
         {
         printf("main_loop, distance: %f\n", front_sensor.value);
@@ -98,10 +204,15 @@ int main(int argc, char *argv[])
                     //moveRight(SLOW_SPEED);
                     //usleep(250000);
                     turnRight( SLOW_SPEED);
+
                     printf(ERASE);
                     if (front_sensor.value < DISTANCE_THRESHOLD)
                         {
                         break;
+                        }
+                    if (midl_sensor.status)
+                        {
+                            usleep(50000);
                         }
                     }
                 }
@@ -111,13 +222,17 @@ int main(int argc, char *argv[])
                     {
                     printf("TURNING LEFT, distance: %f\n", front_sensor.value);
                     //moveLeft(SLOW_SPEED);
-                    //usleep(250000);
                     turnLeft(SLOW_SPEED);
+
                     //driftLeftTest(MAIN_SPEED);
                     printf(ERASE);
                     if (front_sensor.value < DISTANCE_THRESHOLD)
                         {
                         break;
+                        }
+                    if (midl_sensor.status)
+                        {
+                            usleep(50000);
                         }
                     }
                 }
@@ -137,6 +252,8 @@ int main(int argc, char *argv[])
             }
         printf("done obstacle maneuver\n");
         }
+
+*/
 
     mainUninit();
     return 0;
@@ -159,8 +276,11 @@ void mainInit() {
     if (pthread_create(&rigt_thread, NULL, sense, &rigt_sensor) != 0) {
         printf("failed to create right thread\n");
     }
-    if (pthread_create(&front_thread, NULL, read_distance, &front_sensor) != 0) {
+    if (pthread_create(&front_thread, NULL, read_distance1, &front_sensor) != 0) {
         printf("failed to create front thread\n");
+    }
+    if (pthread_create(&side_thread, NULL, read_distance2, &side_sensor) != 0 ) {
+        printf("failed to create side thread\n");
     }
 }
 
@@ -172,6 +292,7 @@ void mainUninit() {
     pthread_join(midl_thread, NULL);
     pthread_join(rigt_thread, NULL);
     pthread_join(front_thread, NULL);
+    pthread_join(side_thread, NULL);
     printf("all threads joined\n");
     uninitMotors();
     gpioTerminate();

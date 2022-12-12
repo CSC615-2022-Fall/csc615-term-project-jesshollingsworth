@@ -16,7 +16,7 @@ typedef struct sensor {
 
 void stopSensing ();
 void * sense (void * ptr);
-void * read_distance(void * args);
-
+void * read_distance1(void * args);
+void * read_distance2(void * args);
 #endif
 
