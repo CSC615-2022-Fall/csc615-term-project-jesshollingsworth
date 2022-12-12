@@ -30,4 +30,5 @@ void moveRight(int16_t speed);
 void turnLeft(int16_t speed);
 void turnRight(int16_t speed);
 void turnLeftAROUND(int16_t speed);
+void driftLeftTest(int16_t speed);
 void stopMotors();

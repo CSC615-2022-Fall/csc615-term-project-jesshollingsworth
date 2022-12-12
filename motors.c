@@ -1,4 +1,5 @@
 #include "motors.h"
+#include <stdio.h>
 
 int FRONT_HAT_HANDLE;
 int BACK_HAT_HANDLE;
@@ -9,9 +10,11 @@ void initMotors() {
 }
 
 void uninitMotors() {
+    printf("insite uninit motors\n");
     stopMotors();
     i2cClose(FRONT_HAT_HANDLE);
     i2cClose(BACK_HAT_HANDLE);
+    printf("motors uninited\n");
 }
 
 void setMotor(uint8_t hat, uint8_t wheel, int16_t speed) {
@@ -108,3 +111,10 @@ void turnLeftAROUND(int16_t speed) {
     setMotor(BACK_HAT_ADDRESS, LEFT_WHEEL, (int16_t)(-speed));
     setMotor(BACK_HAT_ADDRESS, RIGHT_WHEEL, speed);
 }
+
+void driftLeftTest(int16_t speed) {
+    setMotor(FRONT_HAT_ADDRESS, LEFT_WHEEL,speed);
+    setMotor(FRONT_HAT_ADDRESS, RIGHT_WHEEL, (int16_t)(speed / 2));
+    setMotor(BACK_HAT_ADDRESS, LEFT_WHEEL, speed);
+    setMotor(BACK_HAT_ADDRESS, RIGHT_WHEEL, (int16_t)(speed / 2));
+    }
