@@ -1,6 +1,6 @@
 /************************************************************** 
 * Class:  CSC-615-01 Fall 2022 
-* Name: Tony Huang, Jess Hollingsworth, Jesse Henrick
+* Name: Tony Huang, Jess Hollingsworth, Jesse Henrick, Willi Vargas
 * Student ID: 915090688, 920974506, 921323452
 * Github ID: tzphuang, jesshollingsworth, jessehenrick
 * Project: Group Term Project
