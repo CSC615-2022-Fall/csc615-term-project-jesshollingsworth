@@ -57,8 +57,8 @@ void mainUninit();
 void sigintHandler(int sig);
 void wait_for_button();
 
-int16_t MAIN_SPEED = 65;
-int16_t SLOW_SPEED = 45;
+int16_t MAIN_SPEED = 80;
+int16_t SLOW_SPEED = 50;
 
 pthread_t left_thread;
 pthread_t midl_thread;
@@ -88,19 +88,19 @@ int main(int argc, char *argv[])
             if (front_sensor.value < DISTANCE_THRESHOLD) {
                 stopMotors();
                 while (front_sensor.value - DISTANCE_THRESHOLD < 5) {
-                    moveLeft(SLOW_SPEED);
+                    moveLeft(SLOW_SPEED + 5);
                 }
-                usleep(ONE_SECOND);
+                usleep(ONE_HALF_SECOND / 2);
                 stopMotors();
-                usleep(ONE_HALF_SECOND);
-                moveForward(SLOW_SPEED);
+                usleep(ONE_TENTH_SECOND / 10);
+                moveForward(MAIN_SPEED - 10);
                 double min_side_distance = 200;
                 while (side_sensor.value > 50) { ; }
                 min_side_distance = side_sensor.value;
                 while (side_sensor.value - min_side_distance < 5) { ; }
-                usleep(ONE_SECOND);
+                usleep(ONE_FIFTH_SECOND / 2);
                 while (!midl_sensor.status) {
-                    moveRight(SLOW_SPEED);
+                    moveRight(SLOW_SPEED + 10);
                 }
                 moveForward(MAIN_SPEED);
                 timeout = 0;
@@ -116,24 +116,20 @@ int main(int argc, char *argv[])
             if (timeout) {
                 printf("timeout: %u\n", gpioTick() - timeout);
             }
-            if ((timeout != 0) && ((gpioTick() - timeout) >= TWO_SECONDS)) {
+            if ((timeout != 0) && ((gpioTick() - timeout) >= ONE_HALF_SECOND)) {
                 stopMotors();
                 sleep(1);
-//                int turnTime = ONE_TENTH_SECOND;
-//                for (int i = 0; i < 3; i++) {
-//                    if (i % 2) {
-//                        turnRight(100);
-//                        usleep(turnTime += ONE_FIFTH_SECOND);
-//                    }
-//                    else {
-//                        turnLeft(100);
-//                        usleep(turnTime += ONE_FIFTH_SECOND);
-//                    }
-//                }
-//                turnRight(100);
-//                sleep(2);
-                moveBackward(100);
-                usleep(ONE_HALF_SECOND);
+                int turnTime = ONE_TENTH_SECOND;
+                for (int i = 0; i < 3; i++) {
+                    if (i % 2) {
+                        turnRight(100);
+                        usleep(turnTime += ONE_FIFTH_SECOND);
+                    }
+                    else {
+                        turnLeft(100);
+                        usleep(turnTime += ONE_FIFTH_SECOND);
+                    }
+                }
                 break;
             }
             usleep(ONE_TENTH_SECOND);
@@ -149,11 +145,11 @@ int main(int argc, char *argv[])
 //            continue;
 //        }
         else if (left_sensor.status) {
-            turnLeft(SLOW_SPEED);
+            turnLeft(SLOW_SPEED + 10);
             printf("turning left\n");
-            usleep(ONE_TENTH_SECOND);
+            usleep(10);
             printf("turns: %d\n", turns_since_straight);
-            if (turns_since_straight++ >= 8) {
+            if (turns_since_straight++ >= 200) {
                 moveBackward(MAIN_SPEED);
                 usleep(ONE_TENTH_SECOND);
 
@@ -161,11 +157,11 @@ int main(int argc, char *argv[])
             timeout = 0;
         }
         else if (rigt_sensor.status) {
-            turnRight(SLOW_SPEED);
+            turnRight(SLOW_SPEED + 10);
             printf("turning right\n");
-            usleep(ONE_TENTH_SECOND);
+            usleep(10);
             printf("turns: %d\n", turns_since_straight);
-            if (turns_since_straight++ >= 8) {
+            if (turns_since_straight++ >= 200) {
                 moveBackward(MAIN_SPEED);
                 usleep(ONE_TENTH_SECOND);
             }

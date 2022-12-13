@@ -46,7 +46,6 @@ void * sense (void *ptr)
     gpioSetMode(sensor->pin, PI_INPUT);
     while (continue_loop)
         {
-        usleep(5000);
         sensor->status = gpioRead(sensor->pin);
         }
     printf("STOP SENSING on pin: %d\n", sensor->pin);
@@ -61,7 +60,7 @@ void * read_distance1 (void *args)
     gpioSetMode(arg_ptr->trig, PI_OUTPUT);
     while (continue_loop)
         {
-        gpioDelay(250000);
+        gpioDelay(100000);
         gpioTrigger(arg_ptr->trig, 10, 1);
         gpioSetAlertFunc(arg_ptr->echo, alertFunction1);
         distance = 0.017 * (end1 - start1);
@@ -83,7 +82,7 @@ void * read_distance2 (void *args)
     gpioSetMode(arg_ptr->trig, PI_OUTPUT);
     while (continue_loop)
     {
-        gpioDelay(250000);
+        gpioDelay(100000);
         gpioTrigger(arg_ptr->trig, 10, 1);
         gpioSetAlertFunc(arg_ptr->echo, alertFunction2);
         distance = 0.017 * (end2 - start2);
