@@ -1,3 +1,21 @@
+/**************************************************************
+* Class:  CSC-615-01 Fall 2022
+* Name: Tony Huang, Jess Hollingsworth, Jesse Henrick
+* Student ID: 915090688, 920974506, 921323452
+* Github ID: tzphuang, jesshollingsworth, jessehenrick
+* Project: Group Term Project
+*
+* File: motors.h
+*
+* Description: Header file for motors.c to store function calls
+* that abstract the previous motor functions from our given librarys
+* and simplifies them so we can call functions without needing to
+* call the lower level functions. (example: so instead of calling
+* set speed and turn on for each individual motor, we can just have a function
+* that just says driveForward instead.)
+*
+**************************************************************/
+
 #include <stdint-gcc.h>
 #include <PCA9685.h>
 #include <pigpio.h>

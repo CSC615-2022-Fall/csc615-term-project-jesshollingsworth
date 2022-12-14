@@ -1,8 +1,8 @@
-/************************************************************** 
-* Class:  CSC-615-01 Fall 2022 
-* Name: Tony Huang
-* Student ID: 915090688 
-* Github ID: tzphuang
+/**************************************************************
+* Class:  CSC-615-01 Fall 2022
+* Name: Tony Huang, Christopher Ling, Jess Hollingsworth, Jesse Henrick, Willi Vargas
+* Student ID: 915090688, 918266861, 920974506, 921323452, 918778307
+* Github ID: tzphuang, dslayer1392, jesshollingsworth, jessehenrick, williv17
 * Project: Group Term Project
 * 
 * File: main.c
@@ -13,7 +13,7 @@
 * the obstacle course. This file also contains helper functions that obfuscate
 * certain lower level functionality for easier code reading.
 * 
-**************************************************************/ 
+**************************************************************/
 
 #include <stdio.h> //standard in/out
 #include <stdlib.h>
