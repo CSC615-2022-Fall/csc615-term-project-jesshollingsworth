@@ -1,8 +1,8 @@
 /**************************************************************
 * Class:  CSC-615-01 Fall 2022
-* Name: Tony Huang, Jess Hollingsworth, Jesse Henrick, Willi Vargas
-* Student ID: 915090688, 920974506, 921323452, 918778307
-* Github ID: tzphuang, jesshollingsworth, jessehenrick, williv17
+* Name: Tony Huang, Christopher Ling, Jess Hollingsworth, Jesse Henrick, Willi Vargas, Igor Tsygankov
+* Student ID: 915090688, 918266861, 920974506, 921323452, 918778307, 918440047
+* Github ID: tzphuang, dslayer1392, jesshollingsworth, jessehenrick, williv17, igortsygankov
 * Project: Group Term Project
 *
 * File: sensor.h
