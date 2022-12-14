@@ -1,3 +1,21 @@
+/**************************************************************
+* Class:  CSC-615-01 Fall 2022
+* Name: Tony Huang, Jess Hollingsworth, Jesse Henrick, Willi Vargas
+* Student ID: 915090688, 920974506, 921323452, 918778307
+* Github ID: tzphuang, jesshollingsworth, jessehenrick, williv17
+* Project: Group Term Project
+*
+* File: sensors.c
+*
+* Description: This file holds the functions that will update their
+* relevant global variables to be used in main.c. These functions
+* specifically will be passed into pthreadCreate so we constantly
+* have updated variables we can apply our self driving car's logic to.
+* The global variables set here are instantiated in this file and
+* shared across multiple source files.
+*
+**************************************************************/
+
 #include <unistd.h>
 #include <math.h>
 #include <stdio.h>
@@ -95,14 +113,3 @@ void * read_distance2 (void *args)
     printf("STOP SIDE DISTANCE READING\n");
     return NULL;
 }
-
-// wait for ECHO pin pullup
-//while (gpioRead(arg_ptr->echo) == 0) { ; }
-// start relative timer
-//uint32_t micro_seconds_start = gpioTick();
-// wait for echo pin pulldown
-//while (gpioRead(arg_ptr->echo) == 1) { ; }
-// count elapsed microseconds since ECHO pin pullup
-//uint32_t micro_echo_time = gpioTick() - micro_seconds_start;
-//distance = micro_echo_time * 0.017;
-//							 ^^ conversion constant
