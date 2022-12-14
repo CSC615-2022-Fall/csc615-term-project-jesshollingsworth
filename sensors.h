@@ -15,20 +15,22 @@
 
 #include <pigpio.h>
 
-typedef struct distanceSensor {
+typedef struct distanceSensor
+    {
     int echo;
     int trig;
     double value;
-} distanceSensor;
+    } distanceSensor;
 
-typedef struct sensor {
+typedef struct sensor
+    {
     int pin;
     int status;
-} Sensor;
+    } Sensor;
 
 void stopSensing ();
-void * sense (void * ptr);
-void * read_distance1(void * args);
-void * read_distance2(void * args);
+void *sense (void *ptr);
+void *read_distance1 (void *args);
+void *read_distance2 (void *args);
 #endif
 

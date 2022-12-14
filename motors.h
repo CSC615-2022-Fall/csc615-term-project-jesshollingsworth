@@ -36,17 +36,17 @@
 //#define BIN1 PCA_CHANNEL_3
 //#define BIN2 PCA_CHANNEL_4
 
-void initMotors();
-void uninitMotors();
+void initMotors ();
+void uninitMotors ();
 
-void setMotor(uint8_t hat, uint8_t channel, int16_t speed);
+void setMotor (uint8_t hat, uint8_t channel, int16_t speed);
 
-void moveForward(int16_t speed);
-void moveBackward(int16_t speed);
-void moveLeft(int16_t speed);
-void moveRight(int16_t speed);
-void turnLeft(int16_t speed);
-void turnRight(int16_t speed);
-void turnLeftAROUND(int16_t speed);
-void driftLeftTest(int16_t speed);
-void stopMotors();
+void moveForward (int16_t speed);
+void moveBackward (int16_t speed);
+void moveLeft (int16_t speed);
+void moveRight (int16_t speed);
+void turnLeft (int16_t speed);
+void turnRight (int16_t speed);
+void turnLeftAROUND (int16_t speed);
+void driftLeftTest (int16_t speed);
+void stopMotors ();
