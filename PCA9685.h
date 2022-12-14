@@ -14,7 +14,12 @@
 #ifndef __PCA9685_H_
 #define __PCA9685_H_
 
-#include "DEV_Config.h"
+#include <stdint.h>
+
+#define UBYTE   uint8_t
+#define UWORD   uint16_t
+#define UDOUBLE uint32_t
+
 
 //GPIO config
 #define SUBADR1             0x02
@@ -48,9 +53,9 @@
 #define PCA_CHANNEL_14      14
 #define PCA_CHANNEL_15      15
 
-void PCA9685_Init(char addr);
-void PCA9685_SetPWMFreq(UWORD freq);
-void PCA9685_SetPwmDutyCycle(UBYTE channel, UWORD pulse);
-void PCA9685_SetLevel(UBYTE channel, UWORD value);
+int PCA9685_Init(char addr);
+void PCA9685_SetPWMFreq(UBYTE fd, UWORD freq);
+void PCA9685_SetPwmDutyCycle(UBYTE fd, UBYTE channel, UWORD pulse);
+void PCA9685_SetLevel(UBYTE fd, UBYTE channel, UWORD value);
 
 #endif
